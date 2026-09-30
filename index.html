@@ -1,13 +1,85 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>word-in-reach</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Word in Reach Bible study and Scripture discovery workspace." />
+  <title>Word in Reach | Home</title>
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-page="home">
+  <header class="mobile-header">
+    <button class="icon-button" type="button" aria-label="Open menu">☰</button>
+    <a class="wordmark" href="/">Word in Reach</a>
+    <span class="avatar" aria-hidden="true">W</span>
+  </header>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Menu" hidden>
+    <a href="/bible.html">Bible</a>
+    <a href="/search.html">Search</a>
+    <a href="/saved.html">Saved verses</a>
+  </nav>
+
+  <main class="mobile-home">
+    <form class="global-search" id="home-search">
+      <label class="sr-only" for="home-query">Search passage, topic, or keyword</label>
+      <input id="home-query" type="search" placeholder="Search passage, topic, or keyword..." />
+    </form>
+
+    <section class="home-section">
+      <div class="section-title-row">
+        <h1>Daily Discovery</h1>
+      </div>
+      <article class="daily-card">
+        <div class="daily-art" aria-hidden="true">✦</div>
+        <div>
+          <p class="eyebrow">TODAY'S PASSAGE</p>
+          <h2>John 3:16</h2>
+          <p>Begin with a familiar passage and follow where your study leads.</p>
+        </div>
+      </article>
+      <a class="primary-action" href="/bible.html?ref=John%203%3A16">Explore This Passage <span>→</span></a>
+    </section>
+
+    <section class="home-section">
+      <div class="section-title-row">
+        <h2>Continue Studying</h2>
+        <a href="/bible.html">View all</a>
+      </div>
+      <div class="compact-list" id="recent-list"></div>
+    </section>
+
+    <section class="home-section" id="topics">
+      <div class="section-title-row">
+        <h2>Topics to Explore</h2>
+        <a href="/search.html">View all</a>
+      </div>
+      <div class="topic-grid">
+        <a href="/search.html?q=faith"><span>F</span>Faith</a>
+        <a href="/search.html?q=prayer"><span>P</span>Prayer</a>
+        <a href="/search.html?q=love"><span>L</span>Love</a>
+        <a href="/search.html?q=hope"><span>H</span>Hope</a>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-title-row">
+        <h2>Recent Study</h2>
+        <a href="/saved.html">View all</a>
+      </div>
+      <div class="compact-list">
+        <a href="/bible.html?ref=Romans%208%3A28"><strong>Romans 8:28</strong><small>Today · KJV</small><b>›</b></a>
+        <a href="/bible.html?ref=Genesis%201%3A1"><strong>Genesis 1:1</strong><small>Yesterday · KJV</small><b>›</b></a>
+        <a href="/bible.html?ref=Psalm%2023"><strong>Psalm 23</strong><small>Recent · KJV</small><b>›</b></a>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary navigation">
+    <a class="active" href="/"><span>⌂</span>Home</a>
+    <a href="/bible.html"><span>▤</span>Bible</a>
+    <a href="/#topics"><span>✧</span>Discover</a>
+    <a href="/search.html"><span>⌕</span>Search</a>
+    <a href="/saved.html"><span>♡</span>Saved</a>
+  </nav>
+</body>
 </html>

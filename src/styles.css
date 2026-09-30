@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
+
+:root {
+  font-family: 'Inter', sans-serif;
+  color: #2e2e2e;
+  background: #fdf2f8;
+  --bg: #fdf2f8;
+  --surface: #ffffff;
+  --text: #2e2e2e;
+  --plum: #4a1d3a;
+  --rose: #f472b6;
+  --violet: #7c3aed;
+  --muted: #756570;
+  --border: #eadde5;
+  --soft: #fae8f2;
+  --soft-violet: #f3edff;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; }
+body { margin: 0; min-height: 100vh; background: var(--bg); }
+button, input, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a { color: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.eyebrow { margin: 0 0 .35rem; color: var(--rose); font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+.mobile-header, .reader-mobile-header {
+  position: sticky; top: 0; z-index: 20; display: grid; grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center; min-height: 64px; padding: .6rem 1rem; border-bottom: 1px solid var(--border); background: rgba(255,255,255,.96);
+}
+.wordmark { justify-self: center; color: var(--plum); font-weight: 700; text-decoration: none; }
+.icon-button { border: 0; color: var(--plum); background: transparent; font-size: 1.3rem; text-decoration: none; }
+.avatar { display: grid; width: 2rem; height: 2rem; place-items: center; justify-self: end; border-radius: 50%; color: white; background: var(--plum); font-family: 'Source Serif 4', serif; font-weight: 600; }
+
+.mobile-home, .simple-page { max-width: 620px; margin: 0 auto; padding: 1rem 1rem 6.5rem; }
+.global-search { display: flex; gap: .4rem; }
+.global-search input { width: 100%; padding: .8rem .9rem; border: 1px solid var(--border); border-radius: .45rem; color: var(--text); background: white; }
+.global-search button { border: 0; border-radius: .45rem; padding: 0 1rem; color: white; background: var(--plum); }
+.home-section { margin-top: 1.7rem; }
+.section-title-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .7rem; }
+.section-title-row h1, .section-title-row h2 { margin: 0; color: var(--plum); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.section-title-row a { color: var(--muted); font-size: .72rem; text-decoration: none; }
+.daily-card { display: grid; grid-template-columns: 100px 1fr; gap: 1rem; align-items: center; padding: .9rem; border: 1px solid var(--border); background: white; }
+.daily-art { display: grid; min-height: 90px; place-items: center; color: white; background: linear-gradient(145deg, var(--plum), var(--violet)); font-size: 2rem; }
+.daily-card h2 { margin: .1rem 0 .35rem; font-family: 'Source Serif 4', serif; font-size: 1.3rem; }
+.daily-card p:last-child { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.primary-action { display: flex; justify-content: space-between; margin-top: .55rem; padding: .8rem 1rem; color: white; background: var(--plum); font-size: .8rem; font-weight: 600; text-decoration: none; }
+.topic-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .55rem; }
+.topic-grid a { color: var(--text); font-size: .72rem; text-align: center; text-decoration: none; }
+.topic-grid span { display: grid; aspect-ratio: 1; margin-bottom: .4rem; place-items: center; border: 1px solid var(--border); color: var(--plum); background: linear-gradient(145deg, white, var(--soft)); font-family: 'Source Serif 4', serif; font-size: 1.15rem; font-weight: 600; }
+.compact-list { border-top: 1px solid var(--border); }
+.compact-list a, .compact-list button { display: grid; grid-template-columns: 1fr auto; gap: .15rem 1rem; width: 100%; padding: .75rem 0; border: 0; border-bottom: 1px solid var(--border); color: var(--text); background: transparent; text-align: left; text-decoration: none; }
+.compact-list strong { font-family: 'Source Serif 4', serif; font-size: .92rem; }
+.compact-list small { grid-column: 1; color: var(--muted); }
+.compact-list b { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--rose); font-size: 1.2rem; }
+
+.bottom-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 30; display: grid; grid-template-columns: repeat(5, 1fr); min-height: 62px; border-top: 1px solid var(--border); background: rgba(255,255,255,.97); }
+.bottom-nav a { display: grid; place-items: center; align-content: center; gap: .2rem; color: var(--muted); font-size: .62rem; text-decoration: none; }
+.bottom-nav span { font-size: 1.05rem; }
+.bottom-nav a.active { color: var(--plum); font-weight: 700; }
+.bottom-nav a.active span { color: var(--rose); }
+
+.desktop-header, .bible-sidebar, .study-panel, .workspace-tabs { display: none; }
+.reader-mobile-header a, .reader-mobile-header button { border: 0; color: var(--plum); background: transparent; font-size: 1.35rem; text-decoration: none; }
+.reader-mobile-header strong { justify-self: center; font-family: 'Source Serif 4', serif; }
+.reader-mobile-header button { justify-self: end; }
+.study-layout { padding-bottom: 5rem; }
+.reader-column { min-width: 0; background: var(--surface); }
+.reader-mobile-open-tabs { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: .72rem; }
+.reader-mobile-open-tabs button { border: 0; color: var(--rose); background: transparent; }
+.mobile-tab-strip { display: flex; gap: .4rem; padding: .65rem 1rem; overflow-x: auto; border-bottom: 1px solid var(--border); }
+.mobile-passage-tab { flex: 0 0 auto; padding: .5rem .7rem; border: 1px solid var(--border); border-radius: .35rem; color: var(--muted); background: white; font-size: .7rem; }
+.mobile-passage-tab[aria-selected='true'] { border-color: var(--plum); color: white; background: var(--plum); }
+.study-subnav { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); background: white; }
+.study-subnav button { padding: .7rem .2rem; border: 0; border-bottom: 2px solid transparent; color: var(--muted); background: transparent; font-size: .64rem; }
+.study-subnav button.active { border-color: var(--rose); color: var(--plum); font-weight: 700; }
+.reader-toolbar { display: flex; align-items: center; gap: .25rem; padding: .65rem 1rem; border-bottom: 1px solid var(--border); }
+.reader-toolbar select { padding: .4rem .5rem; border: 1px solid var(--border); background: white; }
+.reader-toolbar button { border: 0; color: var(--plum); background: transparent; }
+.toolbar-spacer { flex: 1; }
+.scripture-reader { padding: 1.2rem 1rem 1.5rem; }
+.reader-title-row { display: none; }
+.verse-list p { display: grid; grid-template-columns: 1.7rem 1fr; margin: 0 0 1rem; font-family: 'Source Serif 4', serif; font-size: 1.08rem; line-height: 1.7; }
+.verse-list sup { padding-top: .2rem; color: var(--rose); font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; }
+.reader-status { padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .72rem; }
+.related-section { padding: 1rem; border-top: 1px solid var(--border); }
+.related-section .section-title-row h2 { font-size: .75rem; }
+
+.simple-page { padding-top: 2.5rem; }
+.simple-page > h1 { margin: 0 0 1.5rem; color: var(--plum); font-family: 'Source Serif 4', serif; font-size: 2.3rem; }
+.empty-state { margin-top: 2rem; padding: 2.5rem 1.5rem; border: 1px solid var(--border); background: white; text-align: center; }
+.empty-state > span { color: var(--rose); font-size: 2rem; }
+.empty-state h2 { font-family: 'Source Serif 4', serif; }
+.empty-state p { color: var(--muted); line-height: 1.6; }
+
+@media (min-width: 900px) {
+  body[data-page='bible'] { height: 100vh; overflow: hidden; background: #f8f4f7; }
+  body[data-page='bible'] .bottom-nav, .reader-mobile-header, .reader-mobile-open-tabs, .mobile-tab-strip, .study-subnav { display: none; }
+  .desktop-header { display: grid; grid-template-columns: 220px minmax(280px, 560px) 1fr; align-items: center; height: 72px; padding: 0 1.25rem; border-bottom: 1px solid var(--border); background: white; }
+  .desktop-brand { display: flex; align-items: center; gap: .65rem; color: var(--plum); text-decoration: none; }
+  .brand-icon { display: grid; width: 2.1rem; height: 2.1rem; place-items: center; color: white; background: var(--plum); font-family: 'Source Serif 4', serif; border-radius: .3rem; }
+  .desktop-search input { width: 100%; padding: .72rem .9rem; border: 1px solid var(--border); border-radius: .35rem; background: #fcfafc; }
+  .desktop-header .avatar { justify-self: end; }
+  .workspace-tabs { display: flex; height: 48px; padding-left: 220px; overflow-x: auto; border-bottom: 1px solid var(--border); background: white; }
+  .workspace-tab, .add-tab { display: flex; align-items: center; gap: .7rem; min-width: 125px; padding: 0 .9rem; border: 0; border-right: 1px solid var(--border); color: var(--muted); background: #fcfafc; font-size: .72rem; }
+  .workspace-tab[aria-selected='true'] { color: var(--plum); background: var(--soft); font-weight: 700; }
+  .workspace-tab b { margin-left: auto; font-size: 1rem; font-weight: 400; }
+  .add-tab { min-width: 48px; justify-content: center; color: var(--rose); font-size: 1.2rem; }
+  .study-layout { display: grid; grid-template-columns: 220px minmax(440px, 1fr) minmax(300px, 360px); height: calc(100vh - 120px); padding: 0; }
+  .bible-sidebar { display: block; overflow-y: auto; border-right: 1px solid var(--border); background: white; }
+  .sidebar-title { display: flex; align-items: center; gap: .5rem; padding: 1rem; border-bottom: 1px solid var(--border); color: var(--plum); }
+  .sidebar-title button { margin-left: auto; border: 0; background: transparent; }
+  .bible-sidebar section { padding: .8rem 1rem; }
+  .bible-sidebar h2 { margin: .35rem 0; color: var(--muted); font-size: .68rem; text-transform: uppercase; }
+  .book-list { display: grid; }
+  .book-list button { padding: .23rem .55rem; border: 0; border-left: 3px solid transparent; color: var(--text); background: transparent; font-size: .72rem; text-align: left; }
+  .book-list button:hover, .book-list button.selected { border-color: var(--rose); color: var(--plum); background: var(--soft); }
+  .reader-column { position: relative; overflow-y: auto; border-right: 1px solid var(--border); }
+  .reader-toolbar { padding: .75rem 1.5rem; }
+  .reader-toolbar > select:first-child { display: none; }
+  .scripture-reader { padding: 1.3rem 1.6rem 1.6rem; }
+  .reader-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
+  .reader-title-row h1 { margin: 0; color: var(--plum); font-family: 'Source Serif 4', serif; font-size: 1.35rem; }
+  .reader-title-row select { padding: .45rem .7rem; border: 1px solid var(--border); background: white; }
+  .verse-list p { grid-template-columns: 2rem 1fr; max-width: 760px; font-size: 1.08rem; }
+  .related-section { padding: 1rem 1.6rem 2rem; }
+  .study-panel { display: block; overflow-y: auto; background: white; }
+  .panel-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
+  .panel-tabs button { padding: .9rem .3rem; border: 0; border-bottom: 2px solid transparent; color: var(--muted); background: transparent; font-size: .68rem; }
+  .panel-tabs button.active { border-color: var(--rose); color: var(--plum); font-weight: 700; }
+  .word-card, .panel-section { padding: 1rem; border-bottom: 1px solid var(--border); }
+  .word-symbol { display: grid; width: 72px; height: 72px; place-items: center; float: left; margin: 0 1rem .7rem 0; color: white; background: linear-gradient(145deg, var(--plum), var(--violet)); font-family: 'Source Serif 4', serif; font-size: 2rem; }
+  .word-card h2, .panel-section h2 { margin: 0 0 .75rem; color: var(--plum); font-size: .8rem; }
+  .word-card dl { clear: both; display: grid; grid-template-columns: 90px 1fr; gap: .45rem; font-size: .7rem; }
+  .word-card dt { font-weight: 700; }
+  .word-card dd { margin: 0; color: var(--muted); }
+  .secondary-action { width: 100%; padding: .65rem; border: 1px solid var(--border); color: var(--plum); background: var(--soft); font-size: .7rem; font-weight: 600; }
+  .mini-list p { margin: .4rem 0; padding: .55rem; color: var(--muted); background: #faf7f9; font-size: .7rem; }
+  .translation-preview { display: grid; grid-template-columns: 35px 1fr; gap: .35rem; margin: .6rem 0; font-size: .68rem; }
+  .translation-preview span { height: 6px; background: #e6dfe3; }
+  .translation-preview span:last-child { grid-column: 2; width: 70%; }
+}
+
+@media (min-width: 1200px) {
+  .desktop-header { grid-template-columns: 260px minmax(340px, 620px) 1fr; padding: 0 1.5rem; }
+  .workspace-tabs { padding-left: 260px; }
+  .study-layout { grid-template-columns: 260px minmax(520px, 1fr) 380px; }
+}
+
+
+body[data-page='home'] { background: var(--surface); }
+.mobile-header, .reader-mobile-header { min-height: 72px; border-bottom: 0; }
+.mobile-home { padding: 1rem 1.35rem 6rem; }
+.mobile-home .global-search { margin-bottom: 2.3rem; }
+.home-section { margin-top: 1.65rem; }
+.home-section:first-of-type { margin-top: 0; }
+.section-title-row { margin-bottom: .65rem; }
+.daily-card { grid-template-columns: 104px 1fr; min-height: 106px; gap: 1rem; padding: 0; border: 0; }
+.daily-art { min-height: 104px; border-radius: .25rem; }
+.primary-action { justify-content: center; gap: .4rem; margin-top: .85rem; border-radius: .25rem; }
+.topic-grid { gap: .65rem; }
+.compact-list a, .compact-list button { position: relative; min-height: 61px; grid-template-columns: 44px 1fr auto; align-content: center; gap: .15rem .7rem; }
+.compact-list a::before, .compact-list button::before { content: '✦'; display: grid; grid-column: 1; grid-row: 1 / span 2; width: 42px; height: 42px; place-items: center; border: 1px solid var(--border); border-radius: .25rem; color: var(--rose); background: var(--soft); }
+.compact-list strong { grid-column: 2; font-family: 'Inter', sans-serif; font-size: .76rem; }
+.compact-list small { grid-column: 2; font-size: .65rem; }
+.compact-list b { grid-column: 3; }
+.bottom-nav { min-height: 68px; padding-bottom: env(safe-area-inset-bottom); }
+.reader-mobile-header { grid-template-columns: 2rem 1fr 2rem; padding-inline: 1.2rem; border-bottom: 1px solid var(--border); }
+.reader-mobile-header strong { justify-self: start; margin-left: .7rem; font-family: 'Inter', sans-serif; font-size: .95rem; }
+.reader-mobile-open-tabs { margin: 0 1.25rem; padding: .8rem 0; }
+.mobile-tab-strip { gap: .25rem; padding: .4rem 1.25rem .75rem; }
+.mobile-passage-tab, .mobile-add-tab { border-radius: .15rem; background: #f9f4f7; }
+.mobile-passage-tab { display: flex; align-items: center; gap: .35rem; padding: .52rem .5rem; }
+.mobile-passage-tab[aria-selected='true'] { border-color: var(--rose); color: var(--plum); background: var(--soft); }
+.mobile-add-tab { flex: 0 0 34px; border: 1px solid var(--border); color: var(--plum); }
+.tab-close { display: inline-grid; width: 1rem; height: 1rem; padding: 0; place-items: center; border: 0; color: inherit; background: transparent; font-size: .95rem; line-height: 1; }
+.mobile-menu { position: absolute; top: 68px; left: 1rem; z-index: 25; min-width: 170px; padding: .35rem; border: 1px solid var(--border); border-radius: .35rem; background: white; box-shadow: 0 8px 28px #4a1d3a20; }
+.mobile-menu a { display: block; padding: .7rem .8rem; color: var(--plum); font-size: .8rem; text-decoration: none; }
+#topics { scroll-margin-top: 85px; }
+.study-subnav { margin: 0 1.25rem; }
+.study-subnav button { white-space: nowrap; font-size: .61rem; }
+.reader-toolbar { margin: 0 1.25rem; padding: .65rem 0; border-bottom: 0; }
+.reader-toolbar button { min-width: 2rem; font-size: 1rem; }
+.scripture-reader { padding: .6rem 1.25rem 0; }
+.verse-list p { min-height: 57px; margin-bottom: .9rem; }
+.verse-list p { grid-template-columns: 1.7rem minmax(0, 1fr); }
+.verse-list span { min-width: 0; overflow-wrap: anywhere; }
+.study-subnav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.study-subnav button { white-space: normal; line-height: 1.2; }
+.reader-status { margin-bottom: 0; }
+.related-section { margin: 0 1.25rem; padding: .8rem 0 1rem; }
+.related-section .compact-list a, .related-section .compact-list button { min-height: 57px; }
+.panel-empty { padding: 2rem 1.25rem; color: var(--muted); font-family: 'Source Serif 4', serif; line-height: 1.6; }
+.mobile-browse { display: block; width: calc(100% - 2.5rem); margin: .6rem 1.25rem 0; padding: .55rem .75rem; border: 1px solid var(--border); border-radius: .25rem; color: var(--plum); background: white; text-align: left; font-size: .72rem; }
+.bible-sidebar.is-open { position: fixed; top: 72px; bottom: 68px; left: 0; z-index: 24; display: block; width: min(85vw, 340px); overflow-y: auto; padding: 1rem; border-right: 1px solid var(--border); background: white; box-shadow: 10px 0 30px #4a1d3a20; }
+.bible-sidebar.is-open section { padding: .7rem 0; }
+.bible-sidebar.is-open h2 { color: var(--plum); font-size: .78rem; }
+.book-list p { color: var(--muted); font-size: .72rem; }
+.book-button { display: block; width: 100%; padding: .35rem .5rem; border: 0; border-left: 3px solid transparent; color: var(--text); background: transparent; text-align: left; font-size: .75rem; }
+.book-button.selected { border-color: var(--rose); color: var(--plum); background: var(--soft); }
+.chapter-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: .25rem; padding: .35rem .5rem .6rem; color: var(--muted); font-size: .7rem; }
+.chapter-list button { min-width: 0; padding: .35rem 0; border: 1px solid var(--border); border-radius: .2rem; color: var(--plum); background: white; text-align: center; font-size: .7rem; }
+.verse-list h2 { margin: 1rem 0; color: var(--plum); font-family: 'Inter', sans-serif; font-size: .9rem; }
+.verse-list .reader-error { display: block; color: var(--muted); font-family: 'Inter', sans-serif; font-size: .85rem; }
+.verse-list > button { padding: .6rem .8rem; border: 1px solid var(--border); border-radius: .25rem; color: var(--plum); background: var(--soft); }
+.search-status { margin: 1rem 0; color: var(--muted); font-size: .78rem; }
+.search-results { display: grid; gap: .65rem; }
+.search-results a { display: grid; gap: .45rem; padding: 1rem; border: 1px solid var(--border); border-radius: .3rem; background: white; text-decoration: none; }
+.search-results strong { color: var(--plum); font-size: .85rem; }
+.search-results span { font-family: 'Source Serif 4', serif; line-height: 1.55; }
+.search-more { margin-top: 1rem; }
+body[data-study-view='words'] .study-panel,
+body[data-study-view='commentary'] .study-panel,
+body[data-study-view='cross-references'] .study-panel { display: block; }
+body[data-study-view='words'] .reader-toolbar,
+body[data-study-view='commentary'] .reader-toolbar,
+body[data-study-view='cross-references'] .reader-toolbar,
+body[data-study-view='words'] .scripture-reader,
+body[data-study-view='commentary'] .scripture-reader,
+body[data-study-view='cross-references'] .scripture-reader,
+body[data-study-view='words'] .related-section,
+body[data-study-view='commentary'] .related-section,
+body[data-study-view='cross-references'] .related-section { display: none; }
+body[data-study-view='commentary'] .word-card,
+body[data-study-view='cross-references'] .word-card,
+body[data-study-view='commentary'] .panel-section,
+body[data-study-view='cross-references'] .panel-section { display: none; }
+@media (max-width: 899px) {
+  .study-panel .panel-tabs { display: none; }
+  .study-panel { padding: 0 1.25rem 5rem; }
+}
+[hidden] { display: none !important; }
+
+@media (min-width: 900px) {
+  .mobile-browse { display: none; }
+  .bible-sidebar .book-list > div > .book-button { padding: .2rem .8rem; font-size: .76rem; }
+  .desktop-header { height: 88px; grid-template-columns: 290px minmax(300px, 630px) 1fr; padding-inline: 2rem; }
+  .desktop-brand { gap: 1rem; font-size: 1.1rem; }
+  .brand-icon { width: 2.8rem; height: 2.8rem; }
+  .desktop-search input { padding: .85rem 1rem; }
+  .workspace-tabs { height: 52px; padding: .42rem 1.3rem; gap: .65rem; }
+  .workspace-tab, .add-tab { min-width: 130px; padding-inline: .8rem; border: 1px solid var(--border); border-radius: .25rem; background: #f8f4f7; }
+  .workspace-tab[aria-selected='true'] { border-color: var(--rose); background: var(--soft); }
+  .add-tab { min-width: 42px; }
+  .study-layout { height: calc(100vh - 140px); grid-template-columns: 21% minmax(0, 1fr) 30%; }
+  .sidebar-title { padding: 1.15rem 1.3rem .8rem; }
+  .bible-sidebar section { padding: .6rem 1.3rem; }
+  .bible-sidebar h2 { margin-bottom: .45rem; color: var(--plum); font-size: .76rem; text-transform: none; }
+  .book-list button { padding: .18rem .8rem; font-size: .76rem; }
+  .scripture-reader { padding: 1.5rem 2rem .5rem; }
+  .reader-title-row { margin-bottom: 1.8rem; }
+  .reader-title-row h1 { font-family: 'Inter', sans-serif; font-size: 1.35rem; }
+  .reader-title-row select { min-width: 100px; padding: .55rem; }
+  .reader-toolbar { position: absolute; top: 86px; right: 2rem; z-index: 1; justify-content: flex-end; margin: 0; padding: 0; }
+  .reader-toolbar .toolbar-spacer { display: none; }
+  .verse-list { padding-top: 2rem; }
+  .verse-list p { grid-template-columns: 2.6rem minmax(0, 1fr); min-height: 70px; margin-bottom: .9rem; }
+  .related-section { margin: 0 2rem; padding: 1rem 0; }
+  .panel-tabs { margin: .4rem 1rem 0; }
+  .panel-tabs button { padding: .9rem .25rem; font-size: .72rem; }
+  .word-card { margin: 0 1rem; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 .3rem .3rem; }
+  .word-symbol { width: 90px; height: 90px; }
+  .word-card dl { grid-template-columns: 108px 1fr; font-size: .75rem; }
+  .panel-section { margin: 0 1rem; padding: .9rem 0; }
+}
+
+@media (min-width: 1200px) {
+  .study-layout { grid-template-columns: 21% minmax(0, 1fr) 30%; }
+}
+
+@media (min-width: 900px) {
+  body[data-study-view='words'] .reader-toolbar,
+  body[data-study-view='commentary'] .reader-toolbar,
+  body[data-study-view='cross-references'] .reader-toolbar { display: flex; }
+  body[data-study-view='words'] .scripture-reader,
+  body[data-study-view='commentary'] .scripture-reader,
+  body[data-study-view='cross-references'] .scripture-reader,
+  body[data-study-view='words'] .related-section,
+  body[data-study-view='commentary'] .related-section,
+  body[data-study-view='cross-references'] .related-section { display: block; }
+}

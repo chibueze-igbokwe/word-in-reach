@@ -1,60 +1,145 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.js'
+import './styles.css';
+import { searchScripture } from './getBibleService.js';
+import { loadStudyState } from './storage.js';
+import { normalizeReference, passageUrl } from './utils.js';
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+const state = loadStudyState();
+const page = document.body.dataset.page;
 
-<div class="ticks"></div>
+function renderRecentPassages() {
+  const list = document.querySelector('#recent-list');
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+  if (!list) {
+    return;
+  }
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+  list.innerHTML = '';
 
-setupCounter(document.querySelector('#counter'))
+  [state.activePassage].forEach((reference) => {
+    const link = document.createElement('a');
+    link.href = passageUrl(reference);
+    link.innerHTML = `<strong>${reference}</strong><small>Continue your study</small><b>›</b>`;
+    list.appendChild(link);
+  });
+}
+
+function renderSavedPassages() {
+  const list = document.querySelector('#saved-list');
+
+  if (!list) {
+    return;
+  }
+
+  if (state.savedPassages.length === 0) {
+    list.innerHTML = '<div class="empty-state"><span>♡</span><h2>No saved verses yet</h2><p>Save a passage from the Scripture reader and it will appear here.</p></div>';
+    return;
+  }
+
+  state.savedPassages.forEach((reference) => {
+    const link = document.createElement('a');
+    link.href = passageUrl(reference);
+    link.innerHTML = `<strong>${reference}</strong><small>Saved passage</small><b>›</b>`;
+    list.appendChild(link);
+  });
+}
+
+function handleHomeSearch(formSelector, inputSelector) {
+  const form = document.querySelector(formSelector);
+  const input = document.querySelector(inputSelector);
+
+  if (!form || !input) {
+    return;
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const query = normalizeReference(input.value);
+
+    if (query) {
+      window.location.href = `/search.html?q=${encodeURIComponent(query)}`;
+    }
+  });
+}
+
+function setupSearch() {
+  const form = document.querySelector('#search-form');
+  const input = document.querySelector('#search-query');
+  const results = document.querySelector('#search-results');
+  const status = document.querySelector('#search-status');
+  const more = document.querySelector('#search-more');
+  let currentQuery = '';
+  let offset = 0;
+  let request;
+
+  async function runSearch(append = false) {
+    const query = normalizeReference(input.value);
+    if (!query) {
+      status.textContent = 'Enter a passage or words to search.';
+      return;
+    }
+    if (!append) {
+      currentQuery = query;
+      offset = 0;
+      results.replaceChildren();
+      window.history.replaceState(null, '', `/search.html?q=${encodeURIComponent(query)}`);
+    }
+    request?.abort();
+    request = new AbortController();
+    more.hidden = true;
+    status.textContent = 'Searching Scripture...';
+
+    try {
+      const data = await searchScripture(currentQuery, state.translation, offset, request.signal);
+      if (data.kind === 'reference') {
+        window.location.href = passageUrl(currentQuery);
+        return;
+      }
+      data.matches.forEach((match) => {
+        const link = document.createElement('a');
+        link.href = passageUrl(match.reference);
+        const heading = document.createElement('strong');
+        heading.textContent = match.reference;
+        const text = document.createElement('span');
+        text.textContent = match.text;
+        link.append(heading, text);
+        results.appendChild(link);
+      });
+      offset += data.matches.length;
+      status.textContent = data.total === 0 ? 'No matching verses found.' : `${data.total} matching ${data.total === 1 ? 'verse' : 'verses'} in KJV`;
+      more.hidden = !data.hasMore;
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        status.textContent = error.message;
+        more.hidden = !append;
+      }
+    }
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    runSearch();
+  });
+  more.addEventListener('click', () => runSearch(true));
+  const initialQuery = new URLSearchParams(window.location.search).get('q');
+  if (initialQuery) {
+    input.value = initialQuery;
+    runSearch();
+  }
+}
+
+if (page === 'home') {
+  renderRecentPassages();
+  handleHomeSearch('#home-search', '#home-query');
+  document.querySelector('.mobile-header .icon-button')?.addEventListener('click', () => {
+    const menu = document.querySelector('#mobile-menu');
+    menu.hidden = !menu.hidden;
+  });
+}
+
+if (page === 'saved') {
+  renderSavedPassages();
+}
+
+if (page === 'search') {
+  setupSearch();
+}

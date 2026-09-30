@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Word in Reach Scripture study workspace." />
+  <title>Word in Reach | Scripture Study</title>
+  <script type="module" src="/src/study.js"></script>
+</head>
+<body data-page="bible">
+  <header class="desktop-header">
+    <a class="desktop-brand" href="/"><span class="brand-icon">W</span><strong>Word in Reach</strong></a>
+    <form class="desktop-search" id="desktop-search">
+      <input id="desktop-query" type="search" placeholder="Search passage, topic, or keyword..." aria-label="Search passage, topic, or keyword" />
+    </form>
+    <span class="avatar" aria-hidden="true">W</span>
+  </header>
+
+  <header class="reader-mobile-header">
+    <a href="/" aria-label="Back home">‹</a>
+    <strong id="mobile-reference">John 3:16</strong>
+    <button id="mobile-save" type="button" aria-label="Save passage">♡</button>
+  </header>
+
+  <div class="workspace-tabs" id="passage-tabs" role="tablist" aria-label="Open passages"></div>
+
+  <main class="study-layout">
+    <aside class="bible-sidebar">
+      <div class="sidebar-title"><span>▤</span><strong>Bible</strong><button type="button">⌄</button></div>
+      <section>
+        <h2>Old Testament</h2>
+        <div class="book-list" id="old-books"><p>Loading books...</p></div>
+      </section>
+      <section>
+        <h2>New Testament</h2>
+        <div class="book-list" id="new-books"></div>
+      </section>
+    </aside>
+
+    <section class="reader-column">
+      <button class="mobile-browse" id="mobile-browse" type="button" aria-expanded="false">Browse books and chapters</button>
+      <div class="reader-mobile-open-tabs">
+        <span id="open-passage-count">Open Passages (1)</span>
+        <button id="toggle-mobile-tabs" type="button" aria-label="Toggle open passages" aria-expanded="true">⌄</button>
+      </div>
+
+      <div class="mobile-tab-strip" id="mobile-tabs"></div>
+
+      <div class="study-subnav">
+        <button class="active" type="button">Passage</button>
+        <button type="button">Words</button>
+        <button type="button">Commentary</button>
+        <button type="button">Cross References</button>
+      </div>
+
+      <div class="reader-toolbar">
+        <select id="translation" aria-label="Translation">
+          <option value="kjv">KJV</option>
+        </select>
+        <span class="toolbar-spacer"></span>
+        <button type="button" aria-label="Listen">🔈</button>
+        <button id="save-passage" type="button" aria-label="Save passage">♡</button>
+        <button type="button" aria-label="Share passage">⌯</button>
+        <button type="button" aria-label="More options">•••</button>
+      </div>
+
+      <article class="scripture-reader">
+        <div class="reader-title-row">
+          <h1 id="active-reference">John 3:16</h1>
+          <select aria-label="Translation"><option>KJV</option></select>
+        </div>
+        <div id="scripture-text" class="verse-list" aria-live="polite"></div>
+        <p class="reader-status" id="reader-status" aria-live="polite">Loading passage...</p>
+      </article>
+
+      <section class="related-section">
+        <div class="section-title-row"><h2>Related Verses</h2><a href="/search.html">View all</a></div>
+        <div class="compact-list">
+          <button data-ref="Romans 5:8"><strong>Romans 5:8</strong><small>Open related passage</small><b>›</b></button>
+          <button data-ref="1 John 4:9"><strong>1 John 4:9</strong><small>Open related passage</small><b>›</b></button>
+          <button data-ref="Titus 3:5"><strong>Titus 3:5</strong><small>Open related passage</small><b>›</b></button>
+        </div>
+      </section>
+    </section>
+
+    <aside class="study-panel">
+      <div class="panel-tabs">
+        <button class="active" type="button">Words</button>
+        <button type="button">Commentary</button>
+        <button type="button">Cross References</button>
+      </div>
+      <div class="word-card">
+        <div class="word-symbol">ἀ</div>
+        <h2>Study Word</h2>
+        <dl>
+          <dt>Strong's</dt><dd>—</dd>
+          <dt>Part of Speech</dt><dd>—</dd>
+          <dt>Meaning</dt><dd>—</dd>
+          <dt>Usage</dt><dd>—</dd>
+          <dt>Occurrences</dt><dd>—</dd>
+        </dl>
+        <button class="secondary-action" type="button">View Full Entry →</button>
+      </div>
+      <section class="panel-section">
+        <h2>Related Words</h2>
+        <div class="mini-list"><p>Word-study results</p><p>Related terms</p></div>
+      </section>
+      <section class="panel-section">
+        <h2>Other Translations</h2>
+        <div class="translation-preview"><strong>KJV</strong><span></span><span></span></div>
+        <div class="translation-preview"><strong>WEB</strong><span></span><span></span></div>
+      </section>
+      <div class="panel-empty" id="panel-empty" hidden></div>
+    </aside>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary navigation">
+    <a href="/"><span>⌂</span>Home</a>
+    <a class="active" href="/bible.html"><span>▤</span>Bible</a>
+    <a href="/#topics"><span>✧</span>Discover</a>
+    <a href="/search.html"><span>⌕</span>Search</a>
+    <a href="/saved.html"><span>♡</span>Saved</a>
+  </nav>
+</body>
+</html>
