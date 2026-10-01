@@ -1,7 +1,7 @@
 import './styles.css';
 import { searchScripture } from './getBibleService.js';
 import { loadStudyState } from './storage.js';
-import { normalizeReference, passageUrl } from './utils.js';
+import { appUrl, normalizeReference, passageUrl } from './utils.js';
 
 const state = loadStudyState();
 const page = document.body.dataset.page;
@@ -56,7 +56,7 @@ function handleHomeSearch(formSelector, inputSelector) {
     const query = normalizeReference(input.value);
 
     if (query) {
-      window.location.href = `/search.html?q=${encodeURIComponent(query)}`;
+      window.location.href = appUrl(`search.html?q=${encodeURIComponent(query)}`);
     }
   });
 }
@@ -81,7 +81,7 @@ function setupSearch() {
       currentQuery = query;
       offset = 0;
       results.replaceChildren();
-      window.history.replaceState(null, '', `/search.html?q=${encodeURIComponent(query)}`);
+      window.history.replaceState(null, '', appUrl(`search.html?q=${encodeURIComponent(query)}`));
     }
     request?.abort();
     request = new AbortController();

@@ -1,7 +1,7 @@
 import './styles.css';
 import { getBooks, getChapters, getPassage, searchScripture } from './getBibleService.js';
 import { loadStudyState, saveStudyState } from './storage.js';
-import { normalizeReference, setStatus } from './utils.js';
+import { appUrl, normalizeReference, setStatus } from './utils.js';
 
 let state = loadStudyState();
 
@@ -74,7 +74,7 @@ function renderTabsInto(container, mobile = false) {
     add.setAttribute('aria-label', 'Open another passage');
     add.addEventListener('click', () => {
       if (mobile) {
-        window.location.href = '/search.html';
+        window.location.href = appUrl('search.html');
       } else {
         document.querySelector('#desktop-query')?.focus();
       }
@@ -284,7 +284,7 @@ document.querySelector('#desktop-search')?.addEventListener('submit', async (eve
     if (result.kind === 'reference') {
       openPassage(query);
     } else {
-      window.location.href = `/search.html?q=${encodeURIComponent(query)}`;
+      window.location.href = appUrl(`search.html?q=${encodeURIComponent(query)}`);
     }
   } catch (error) {
     setStatus(error.message);

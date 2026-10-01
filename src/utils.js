@@ -10,6 +10,10 @@ export function setStatus(message) {
   }
 }
 
+export function appUrl(path = '', base = import.meta.env?.BASE_URL || '/') {
+  return `${base.replace(/\/?$/, '/')}${path.replace(/^\/+/, '')}`;
+}
+
 export function passageUrl(reference) {
-  return `/bible.html?ref=${encodeURIComponent(reference)}`;
+  return appUrl(`bible.html?ref=${encodeURIComponent(reference)}`);
 }
