@@ -1,6 +1,10 @@
 const bibleBase = 'https://api.getbible.net/v2';
 const queryBase = 'https://query.getbible.net/v2';
 const searchBase = 'https://search.getbible.net/v2';
+const lexicalBase = 'https://api.getbible.net/v3';
+const dictionaryBase = 'https://dictionaries.getbible.net/v1';
+const commentaryBase = 'https://commentaries.getbible.net/v1';
+const topicsBase = 'https://bookmarks.getbible.net/v1';
 
 async function requestJson(url, signal) {
   let response;
@@ -78,4 +82,35 @@ export async function searchScripture(query, translation = 'kjv', offset = 0, si
     hasMore: Boolean(data.query?.has_more),
     matches,
   };
+}
+
+export async function getLexicalVerse(bookNumber, chapter, verse, translation = 'kjv', signal) {
+  const data = await requestJson(`${lexicalBase}/${translation}/${bookNumber}/${chapter}.json`, signal);
+  return data.verses?.find((item) => Number(item.verse) === Number(verse)) || null;
+}
+
+export async function getDictionaryEntry(strongId, signal) {
+  const id = String(strongId).toUpperCase();
+  if (!/^[GH]\d{1,5}$/.test(id)) {
+    throw new Error('Select a word with a Strong’s number.');
+  }
+  const dictionary = id.startsWith('G') ? 'strongsgreek' : 'strongshebrew';
+  return requestJson(`${dictionaryBase}/${dictionary}/${id}.json`, signal);
+}
+
+export async function getCommentary(bookNumber, chapter, verse, signal) {
+  const data = await requestJson(`${commentaryBase}/clarke/${bookNumber}/${chapter}.json`, signal);
+  return data.entries?.filter((entry) => (entry.verses ?? [entry.verse]).includes(Number(verse))) || [];
+}
+
+export async function getTopics(signal) {
+  const data = await requestJson(`${topicsBase}/topics.json`, signal);
+  return data.topics || [];
+}
+
+export async function getTopic(id, signal) {
+  if (!/^[a-z0-9-]+$/.test(id)) {
+    throw new Error('That topic was not found.');
+  }
+  return requestJson(`${topicsBase}/topics/${id}.json`, signal);
 }

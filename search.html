@@ -7,15 +7,16 @@
   <script type="module" src="/src/main.js"></script>
 </head>
 <body data-page="search">
-  <header class="mobile-header"><a class="icon-button" href="./">‹</a><a class="wordmark" href="./">Search Scripture</a><span></span></header>
+  <header class="mobile-header"><a class="icon-button" href="./" aria-label="Back home"><span data-icon="chevron-left"></span></a><a class="wordmark" href="./">Search Scripture</a><span></span></header>
   <main class="simple-page">
     <p class="eyebrow">DISCOVER SCRIPTURE</p>
     <h1>Search</h1>
     <form class="global-search" id="search-form"><label class="sr-only" for="search-query">Search Scripture</label><input id="search-query" type="search" placeholder="Search passage, topic, or keyword..." required /><button>Search</button></form>
     <p class="search-status" id="search-status" role="status">Enter a passage or words to search the KJV.</p>
+    <div class="topic-directory" id="topic-directory" hidden></div>
     <div class="search-results" id="search-results"></div>
     <button class="secondary-action search-more" id="search-more" type="button" hidden>Show more results</button>
   </main>
-  <nav class="bottom-nav" aria-label="Primary navigation"><a href="./"><span>⌂</span>Home</a><a href="./bible.html"><span>▤</span>Bible</a><a href="./#topics"><span>✧</span>Discover</a><a class="active" href="./search.html"><span>⌕</span>Search</a><a href="./saved.html"><span>♡</span>Saved</a></nav>
+  <nav class="bottom-nav" aria-label="Primary navigation"><a href="./"><span data-icon="house"></span>Home</a><a href="./bible.html"><span data-icon="book-open"></span>Bible</a><a href="./#topics"><span data-icon="compass"></span>Discover</a><a class="active" href="./search.html"><span data-icon="search"></span>Search</a><a href="./saved.html"><span data-icon="heart"></span>Saved</a></nav>
 </body>
 </html>

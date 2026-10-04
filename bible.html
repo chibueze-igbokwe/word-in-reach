@@ -17,16 +17,16 @@
   </header>
 
   <header class="reader-mobile-header">
-    <a href="./" aria-label="Back home">‹</a>
+    <a href="./" aria-label="Back home"><span data-icon="chevron-left"></span></a>
     <strong id="mobile-reference">John 3:16</strong>
-    <button id="mobile-save" type="button" aria-label="Save passage">♡</button>
+    <button id="mobile-save" type="button" aria-label="Save passage"><span data-icon="heart"></span></button>
   </header>
 
   <div class="workspace-tabs" id="passage-tabs" role="tablist" aria-label="Open passages"></div>
 
   <main class="study-layout">
     <aside class="bible-sidebar">
-      <div class="sidebar-title"><span>▤</span><strong>Bible</strong><button type="button">⌄</button></div>
+      <div class="sidebar-title"><span data-icon="book-open"></span><strong>Bible</strong><button type="button" aria-label="Collapse sidebar"><span data-icon="chevron-up"></span></button></div>
       <section>
         <h2>Old Testament</h2>
         <div class="book-list" id="old-books"><p>Loading books...</p></div>
@@ -41,7 +41,7 @@
       <button class="mobile-browse" id="mobile-browse" type="button" aria-expanded="false">Browse books and chapters</button>
       <div class="reader-mobile-open-tabs">
         <span id="open-passage-count">Open Passages (1)</span>
-        <button id="toggle-mobile-tabs" type="button" aria-label="Toggle open passages" aria-expanded="true">⌄</button>
+        <button id="toggle-mobile-tabs" type="button" aria-label="Toggle open passages" aria-expanded="true"><span data-icon="chevron-up"></span></button>
       </div>
 
       <div class="mobile-tab-strip" id="mobile-tabs"></div>
@@ -58,10 +58,10 @@
           <option value="kjv">KJV</option>
         </select>
         <span class="toolbar-spacer"></span>
-        <button type="button" aria-label="Listen">🔈</button>
-        <button id="save-passage" type="button" aria-label="Save passage">♡</button>
-        <button type="button" aria-label="Share passage">⌯</button>
-        <button type="button" aria-label="More options">•••</button>
+        <button type="button" aria-label="Listen"><span data-icon="volume-2"></span></button>
+        <button id="save-passage" type="button" aria-label="Save passage"><span data-icon="heart"></span></button>
+        <button type="button" aria-label="Share passage"><span data-icon="share-2"></span></button>
+        <button type="button" aria-label="More options"><span data-icon="ellipsis"></span></button>
       </div>
 
       <article class="scripture-reader">
@@ -74,12 +74,8 @@
       </article>
 
       <section class="related-section">
-        <div class="section-title-row"><h2>Related Verses</h2><a href="./search.html">View all</a></div>
-        <div class="compact-list">
-          <button data-ref="Romans 5:8"><strong>Romans 5:8</strong><small>Open related passage</small><b>›</b></button>
-          <button data-ref="1 John 4:9"><strong>1 John 4:9</strong><small>Open related passage</small><b>›</b></button>
-          <button data-ref="Titus 3:5"><strong>Titus 3:5</strong><small>Open related passage</small><b>›</b></button>
-        </div>
+        <div class="section-title-row"><h2>Related Verses</h2><button id="view-cross-references" type="button">View all</button></div>
+        <div class="compact-list" id="related-verses" aria-live="polite"></div>
       </section>
     </section>
 
@@ -89,37 +85,16 @@
         <button type="button">Commentary</button>
         <button type="button">Cross References</button>
       </div>
-      <div class="word-card">
-        <div class="word-symbol">ἀ</div>
-        <h2>Study Word</h2>
-        <dl>
-          <dt>Strong's</dt><dd>—</dd>
-          <dt>Part of Speech</dt><dd>—</dd>
-          <dt>Meaning</dt><dd>—</dd>
-          <dt>Usage</dt><dd>—</dd>
-          <dt>Occurrences</dt><dd>—</dd>
-        </dl>
-        <button class="secondary-action" type="button">View Full Entry →</button>
-      </div>
-      <section class="panel-section">
-        <h2>Related Words</h2>
-        <div class="mini-list"><p>Word-study results</p><p>Related terms</p></div>
-      </section>
-      <section class="panel-section">
-        <h2>Other Translations</h2>
-        <div class="translation-preview"><strong>KJV</strong><span></span><span></span></div>
-        <div class="translation-preview"><strong>WEB</strong><span></span><span></span></div>
-      </section>
-      <div class="panel-empty" id="panel-empty" hidden></div>
+      <div class="study-content" id="study-content" aria-live="polite"></div>
     </aside>
   </main>
 
   <nav class="bottom-nav" aria-label="Primary navigation">
-    <a href="./"><span>⌂</span>Home</a>
-    <a class="active" href="./bible.html"><span>▤</span>Bible</a>
-    <a href="./#topics"><span>✧</span>Discover</a>
-    <a href="./search.html"><span>⌕</span>Search</a>
-    <a href="./saved.html"><span>♡</span>Saved</a>
+    <a href="./"><span data-icon="house"></span>Home</a>
+    <a class="active" href="./bible.html"><span data-icon="book-open"></span>Bible</a>
+    <a href="./#topics"><span data-icon="compass"></span>Discover</a>
+    <a href="./search.html"><span data-icon="search"></span>Search</a>
+    <a href="./saved.html"><span data-icon="heart"></span>Saved</a>
   </nav>
 </body>
 </html>

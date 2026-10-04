@@ -4,7 +4,7 @@ const defaultState = {
   openPassages: ['John 3:16'],
   activePassage: 'John 3:16',
   savedPassages: [],
-  recentPassages: ['Romans 8:28', 'Genesis 1:1', 'Psalm 23'],
+  recentPassages: ['John 3:16'],
   translation: 'kjv',
 };
 
