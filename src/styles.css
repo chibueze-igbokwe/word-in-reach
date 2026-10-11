@@ -326,3 +326,41 @@ body[data-study-view='cross-references'] .panel-section { display: none; }
   body[data-study-view='commentary'] .related-section,
   body[data-study-view='cross-references'] .related-section { display: block; }
 }
+
+.global-search input, .desktop-search input {
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.global-search input:focus, .desktop-search input:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px #7c3aed1a;
+}
+.primary-action {
+  transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.daily-card, .search-results a {
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.mobile-passage-tab, .workspace-tab {
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.bottom-nav .app-icon {
+  transition: transform .2s ease;
+}
+
+@media (hover: hover) {
+  .primary-action:hover { background: #60304d; box-shadow: 0 4px 12px #4a1d3a26; transform: translateY(-2px); }
+  .daily-card:hover, .search-results a:hover { box-shadow: 0 5px 16px #4a1d3a14; transform: translateY(-2px); }
+  .mobile-passage-tab:hover, .workspace-tab:hover { border-color: var(--rose); box-shadow: 0 3px 9px #4a1d3a14; transform: translateY(-1px); }
+  .bottom-nav a:hover .app-icon { transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-search input, .desktop-search input,
+  .primary-action, .daily-card, .search-results a,
+  .mobile-passage-tab, .workspace-tab, .bottom-nav .app-icon {
+    transition: none;
+  }
+  .primary-action:hover, .daily-card:hover, .search-results a:hover,
+  .mobile-passage-tab:hover, .workspace-tab:hover,
+  .bottom-nav a:hover .app-icon { transform: none; }
+}
