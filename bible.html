@@ -26,7 +26,7 @@
 
   <main class="study-layout">
     <aside class="bible-sidebar">
-      <div class="sidebar-title"><span data-icon="book-open"></span><strong>Bible</strong><button type="button" aria-label="Collapse sidebar"><span data-icon="chevron-up"></span></button></div>
+      <div class="sidebar-title"><span data-icon="book-open"></span><strong>Bible</strong><button id="sidebar-toggle" type="button" aria-label="Collapse Bible sidebar" aria-expanded="true"><span data-icon="chevron-up"></span></button></div>
       <section>
         <h2>Old Testament</h2>
         <div class="book-list" id="old-books"><p>Loading books...</p></div>
@@ -56,18 +56,23 @@
       <div class="reader-toolbar">
         <select id="translation" aria-label="Translation">
           <option value="kjv">KJV</option>
+          <option value="web">WEB</option>
         </select>
         <span class="toolbar-spacer"></span>
-        <button type="button" aria-label="Listen"><span data-icon="volume-2"></span></button>
+        <button id="listen-passage" type="button" aria-label="Listen to passage"><span data-icon="volume-2"></span></button>
         <button id="save-passage" type="button" aria-label="Save passage"><span data-icon="heart"></span></button>
-        <button type="button" aria-label="Share passage"><span data-icon="share-2"></span></button>
-        <button type="button" aria-label="More options"><span data-icon="ellipsis"></span></button>
+        <button id="share-passage" type="button" aria-label="Share passage"><span data-icon="share-2"></span></button>
+        <button id="more-options" type="button" aria-label="More options" aria-expanded="false" aria-controls="reader-options"><span data-icon="ellipsis"></span></button>
+        <div class="reader-options" id="reader-options" hidden>
+          <button id="copy-passage" type="button">Copy passage</button>
+          <button id="close-other-tabs" type="button">Close other tabs</button>
+        </div>
       </div>
 
       <article class="scripture-reader">
         <div class="reader-title-row">
           <h1 id="active-reference">John 3:16</h1>
-          <select aria-label="Translation"><option>KJV</option></select>
+          <select id="desktop-translation" aria-label="Translation"><option value="kjv">KJV</option><option value="web">WEB</option></select>
         </div>
         <div id="scripture-text" class="verse-list" aria-live="polite"></div>
         <p class="reader-status" id="reader-status" aria-live="polite">Loading passage...</p>

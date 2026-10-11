@@ -114,3 +114,19 @@ export async function getTopic(id, signal) {
   }
   return requestJson(`${topicsBase}/topics/${id}.json`, signal);
 }
+
+export async function getDailyDiscovery(date = new Date(), translation = 'kjv', signal) {
+  const day = Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
+  const topicIds = ['saved-by-faith', 'effective-prayer', 'biblical-love', 'grace'];
+  const [topic, books] = await Promise.all([
+    getTopic(topicIds[day % topicIds.length], signal),
+    getBooks(translation, signal),
+  ]);
+  if (!topic.verses?.length) throw new Error('No daily passage is available today.');
+  const [bookNumber, chapter, verse] = topic.verses[day % topic.verses.length];
+  const book = books.find((item) => item.number === Number(bookNumber));
+  if (!book) throw new Error('The daily passage is unavailable in this translation.');
+  const reference = `${book.name} ${chapter}:${verse}`;
+  const passage = await getPassage(reference, translation, signal);
+  return { reference, text: passage.verses[0].text, topic: topic.name };
+}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getLexicalVerse, getDictionaryEntry, getCommentary, getTopics, getTopic } from '../src/getBibleService.js';
+import { getLexicalVerse, getDictionaryEntry, getCommentary, getTopics, getTopic, getDailyDiscovery } from '../src/getBibleService.js';
 import { getCrossReferences } from '../src/bibleDataService.js';
 
 test('study lookups use verse-linked lexical and commentary records', async () => {
@@ -70,6 +70,28 @@ test('cross references map API book IDs to canonical book numbers', async () => 
         : { chapter: { content: [{ verse: 16, references: [{ book: 'ROM', chapter: 5, verse: 8, score: 4 }] }] } },
     });
     assert.deepEqual(await getCrossReferences(43, 3, 16), [{ bookNumber: 45, chapter: 5, verse: 8, endVerse: null }]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('daily discovery uses a dated GetBible topic and real verse text', async () => {
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+  try {
+    globalThis.fetch = async (url) => {
+      requested.push(url);
+      let data;
+      if (url.includes('/topics/')) data = { name: 'Grace', verses: [[43, 3, 16]] };
+      else if (url.endsWith('/books.json')) data = { 43: { nr: 43, name: 'John' } };
+      else data = { web_43_3: { book_name: 'John', chapter: 3, verses: [{ verse: 16, text: 'Real verse text' }] } };
+      return { ok: true, json: async () => data };
+    };
+    assert.deepEqual(await getDailyDiscovery(new Date(2026, 9, 11), 'web'), {
+      reference: 'John 3:16', text: 'Real verse text', topic: 'Grace',
+    });
+    assert.ok(requested.some((url) => url.includes('/v2/web/books.json')));
+    assert.ok(requested.some((url) => url.includes('/v2/web/John%203%3A16')));
   } finally {
     globalThis.fetch = originalFetch;
   }

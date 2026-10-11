@@ -4,21 +4,25 @@ const defaultState = {
   openPassages: ['John 3:16'],
   activePassage: 'John 3:16',
   savedPassages: [],
-  recentPassages: ['John 3:16'],
+  recentPassages: [],
   translation: 'kjv',
 };
 
 export function loadStudyState() {
-  const savedState = localStorage.getItem(STORAGE_KEY);
-
-  if (!savedState) {
-    return { ...defaultState };
-  }
-
   try {
-    return { ...defaultState, ...JSON.parse(savedState) };
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const passages = (items) => Array.isArray(items) ? [...new Set(items.filter((item) => typeof item === 'string' && item.trim()))] : [];
+    const openPassages = passages(saved?.openPassages);
+    if (!openPassages.length) openPassages.push(...defaultState.openPassages);
+    return {
+      openPassages,
+      activePassage: openPassages.includes(saved?.activePassage) ? saved.activePassage : openPassages[0],
+      savedPassages: passages(saved?.savedPassages),
+      recentPassages: passages(saved?.recentPassages).slice(0, 8),
+      translation: ['kjv', 'web'].includes(saved?.translation) ? saved.translation : defaultState.translation,
+    };
   } catch {
-    return { ...defaultState };
+    return { ...defaultState, openPassages: [...defaultState.openPassages], savedPassages: [], recentPassages: [] };
   }
 }
 

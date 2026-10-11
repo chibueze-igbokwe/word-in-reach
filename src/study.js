@@ -3,7 +3,7 @@ import { getBooks, getChapters, getPassage, searchScripture, getLexicalVerse, ge
 import { getCrossReferences } from './bibleDataService.js';
 import { createIcon, mountIcons } from './icons.js';
 import { loadStudyState, saveStudyState } from './storage.js';
-import { appUrl, normalizeReference, setStatus } from './utils.js';
+import { appUrl, normalizeReference, passageUrl, setStatus } from './utils.js';
 
 let state = loadStudyState();
 
@@ -21,6 +21,8 @@ let selectedVerse;
 let studyView = 'Words';
 let studyRequestId = 0;
 let crossRequestId = 0;
+let currentPassage;
+let speech;
 const studyContent = document.querySelector('#study-content');
 const relatedVerses = document.querySelector('#related-verses');
 
@@ -275,19 +277,25 @@ function renderTabsInto(container, mobile = false) {
   }
 }
 
+function renderSaveButtons() {
+  const saved = selectedVerse && state.savedPassages.includes(referenceFor(selectedVerse));
+  [saveButton, mobileSaveButton].forEach((button) => {
+    button.replaceChildren(createIcon('heart'));
+    button.classList.toggle('is-saved', saved);
+    button.disabled = !selectedVerse;
+    button.setAttribute('aria-label', saved ? `Remove ${referenceFor(selectedVerse)} from saved verses` : `Save ${selectedVerse ? referenceFor(selectedVerse) : 'verse'}`);
+  });
+}
+
 function renderWorkspace() {
   renderTabsInto(tabs);
   renderTabsInto(mobileTabs, true);
   activeReference.textContent = state.activePassage;
   mobileReference.textContent = state.activePassage;
   document.querySelector('#open-passage-count').textContent = `Open Passages (${state.openPassages.length})`;
-
-  const saved = state.savedPassages.includes(state.activePassage);
-  [saveButton, mobileSaveButton].forEach((button) => {
-    button.replaceChildren(createIcon('heart'));
-    button.classList.toggle('is-saved', saved);
-    button.setAttribute('aria-label', saved ? 'Remove saved passage' : 'Save passage');
-  });
+  document.querySelector('#translation').value = state.translation;
+  document.querySelector('#desktop-translation').value = state.translation;
+  renderSaveButtons();
   document.querySelectorAll('.book-list button').forEach((button) => {
     button.classList.toggle('selected', state.activePassage.startsWith(`${button.dataset.book} `));
   });
@@ -335,6 +343,7 @@ function renderVerses(passage) {
 function selectVerse(verse) {
   selectedVerse = verse;
   document.querySelectorAll('.verse-row').forEach((row) => row.classList.toggle('selected', row.getAttribute('aria-label') === `Study ${referenceFor(verse)}`));
+  renderSaveButtons();
   loadCrossReferences();
   if (studyView === 'Words') loadWords();
   if (studyView === 'Commentary') loadCommentary();
@@ -349,6 +358,10 @@ async function loadPassage(reference, addTab = false) {
   passageRequest?.abort();
   passageRequest = new AbortController();
   const requestId = ++passageRequestId;
+  stopListening();
+  currentPassage = null;
+  selectedVerse = null;
+  renderSaveButtons();
   scriptureText.textContent = 'Loading Scripture...';
   setStatus(`Loading ${normalized}...`);
 
@@ -364,10 +377,11 @@ async function loadPassage(reference, addTab = false) {
     state.recentPassages = [normalized, ...state.recentPassages.filter((item) => item !== normalized)].slice(0, 8);
     saveState();
     renderWorkspace();
+    currentPassage = passage;
     selectedVerse = passage.verses[0];
     renderVerses(passage);
     selectVerse(selectedVerse);
-    setStatus(`${passage.verses.length} ${passage.verses.length === 1 ? 'verse' : 'verses'} · KJV`);
+    setStatus(`${passage.verses.length} ${passage.verses.length === 1 ? 'verse' : 'verses'} · ${state.translation.toUpperCase()}`);
     return true;
   } catch (error) {
     if (error.name === 'AbortError' || requestId !== passageRequestId) {
@@ -417,7 +431,8 @@ function closePassage(reference) {
 }
 
 function toggleSave() {
-  const reference = state.activePassage;
+  if (!selectedVerse) return;
+  const reference = referenceFor(selectedVerse);
   const index = state.savedPassages.indexOf(reference);
 
   if (index === -1) {
@@ -429,7 +444,24 @@ function toggleSave() {
   }
 
   saveState();
-  renderWorkspace();
+  renderSaveButtons();
+}
+
+function passageText() {
+  if (!currentPassage) return '';
+  return `${state.activePassage} (${state.translation.toUpperCase()})\n${currentPassage.verses.map((verse) => `${verse.chapter}:${verse.number} ${verse.text}`).join('\n')}`;
+}
+
+function stopListening() {
+  const activeSpeech = speech;
+  speech = null;
+  if (activeSpeech) window.speechSynthesis.cancel();
+  document.querySelector('#listen-passage').setAttribute('aria-label', 'Listen to passage');
+}
+
+function hideReaderOptions() {
+  document.querySelector('#reader-options').hidden = true;
+  document.querySelector('#more-options').setAttribute('aria-expanded', 'false');
 }
 
 async function showChapters(book, container) {
@@ -515,16 +547,113 @@ document.querySelectorAll('[data-ref]').forEach((element) => {
 
 saveButton?.addEventListener('click', toggleSave);
 mobileSaveButton?.addEventListener('click', toggleSave);
+document.querySelectorAll('#translation, #desktop-translation').forEach((select) => {
+  select.addEventListener('change', () => {
+    if (select.value === state.translation) return;
+    stopListening();
+    state.translation = select.value;
+    saveState();
+    renderWorkspace();
+    loadBookNavigation();
+    loadPassage(state.activePassage);
+  });
+});
+document.querySelector('#listen-passage').addEventListener('click', (event) => {
+  if (speech) {
+    stopListening();
+    return;
+  }
+  if (!currentPassage || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+    setStatus('Audio reading is unavailable in this browser.');
+    return;
+  }
+  speech = new SpeechSynthesisUtterance(currentPassage.verses.map((verse) => verse.text).join(' '));
+  speech.lang = 'en-US';
+  speech.onend = stopListening;
+  speech.onerror = () => {
+    stopListening();
+    setStatus('Audio reading could not be completed.');
+  };
+  window.speechSynthesis.speak(speech);
+  event.currentTarget.setAttribute('aria-label', 'Stop listening');
+});
+document.querySelector('#share-passage').addEventListener('click', async () => {
+  const reference = selectedVerse ? referenceFor(selectedVerse) : state.activePassage;
+  const url = new URL(passageUrl(reference), window.location.href).href;
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: reference, url });
+      return;
+    } catch (error) {
+      if (error.name === 'AbortError') return;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    setStatus(`Link to ${reference} copied.`);
+  } catch {
+    setStatus('Could not share this passage.');
+  }
+});
+document.querySelector('#more-options').addEventListener('click', (event) => {
+  const menu = document.querySelector('#reader-options');
+  menu.hidden = !menu.hidden;
+  event.currentTarget.setAttribute('aria-expanded', String(!menu.hidden));
+});
+document.querySelector('#copy-passage').addEventListener('click', async () => {
+  hideReaderOptions();
+  if (!currentPassage) {
+    setStatus('Open a passage before copying.');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(passageText());
+    setStatus(`${state.activePassage} copied.`);
+  } catch {
+    setStatus('Could not copy this passage.');
+  }
+});
+document.querySelector('#close-other-tabs').addEventListener('click', () => {
+  hideReaderOptions();
+  state.openPassages = [state.activePassage];
+  saveState();
+  renderWorkspace();
+  setStatus('Other passage tabs closed.');
+});
+document.querySelector('#sidebar-toggle').addEventListener('click', (event) => {
+  const sidebar = document.querySelector('.bible-sidebar');
+  if (window.innerWidth < 900) {
+    sidebar.classList.remove('is-open');
+    document.querySelector('#mobile-browse').setAttribute('aria-expanded', 'false');
+    return;
+  }
+  const collapsed = sidebar.classList.toggle('is-collapsed');
+  document.querySelector('.study-layout').classList.toggle('sidebar-collapsed', collapsed);
+  event.currentTarget.setAttribute('aria-expanded', String(!collapsed));
+  event.currentTarget.setAttribute('aria-label', collapsed ? 'Expand Bible sidebar' : 'Collapse Bible sidebar');
+});
 document.querySelector('#mobile-browse').addEventListener('click', (event) => {
   const open = document.querySelector('.bible-sidebar').classList.toggle('is-open');
   event.currentTarget.setAttribute('aria-expanded', String(open));
 });
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+  hideReaderOptions();
+  document.querySelector('.bible-sidebar').classList.remove('is-open');
+  document.querySelector('#mobile-browse').setAttribute('aria-expanded', 'false');
+});
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('#more-options, #reader-options')) hideReaderOptions();
+});
+window.addEventListener('pagehide', stopListening);
 function showStudyView(view) {
   studyRequestId += 1;
   document.body.dataset.studyView = view.toLowerCase().replace(' ', '-');
   if (view !== 'Passage') studyView = view;
   document.querySelectorAll('.study-subnav button, .panel-tabs button').forEach((button) => {
-    button.classList.toggle('active', button.textContent.trim() === view);
+    const active = button.textContent.trim() === view;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
   });
   if (view === 'Words') loadWords();
   if (view === 'Commentary') loadCommentary();
@@ -545,6 +674,9 @@ document.querySelector('#toggle-mobile-tabs')?.addEventListener('click', (event)
 const initialReference = new URLSearchParams(window.location.search).get('ref');
 
 mountIcons();
+document.querySelectorAll('.study-subnav button, .panel-tabs button').forEach((button) => {
+  button.setAttribute('aria-pressed', String(button.classList.contains('active')));
+});
 loadBookNavigation();
 if (initialReference && initialReference !== state.activePassage) {
   openPassage(initialReference);

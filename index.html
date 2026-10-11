@@ -9,7 +9,7 @@
 </head>
 <body data-page="home">
   <header class="mobile-header">
-    <button class="icon-button" type="button" aria-label="Open menu"><span data-icon="menu"></span></button>
+    <button class="icon-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span data-icon="menu"></span></button>
     <a class="wordmark" href="./">Word in Reach</a>
     <span class="avatar" aria-hidden="true">W</span>
   </header>
@@ -29,15 +29,16 @@
       <div class="section-title-row">
         <h1>Daily Discovery</h1>
       </div>
-      <article class="daily-card">
+      <article class="daily-card" aria-live="polite">
         <div class="daily-art" aria-hidden="true"><span data-icon="sparkles"></span></div>
         <div>
-          <p class="eyebrow">TODAY'S PASSAGE</p>
-          <h2>John 3:16</h2>
-          <p>Begin with a familiar passage and follow where your study leads.</p>
+          <p class="eyebrow" id="daily-topic">TODAY'S PASSAGE</p>
+          <h2 id="daily-reference">Loading daily passage...</h2>
+          <p id="daily-description">Finding a passage from GetBible Topics.</p>
         </div>
       </article>
-      <a class="primary-action" href="./bible.html?ref=John%203%3A16">Explore This Passage <span data-icon="arrow-right"></span></a>
+      <a class="primary-action" id="daily-link" href="./bible.html" hidden>Explore This Passage <span data-icon="arrow-right"></span></a>
+      <button class="secondary-action" id="daily-retry" type="button" hidden>Try again</button>
     </section>
 
     <section class="home-section">
@@ -59,7 +60,7 @@
     <section class="home-section">
       <div class="section-title-row">
         <h2>Recent Study</h2>
-        <a href="./saved.html">View all</a>
+        <a href="./saved.html#recent-study">View all</a>
       </div>
       <div class="compact-list" id="recent-study-list"></div>
     </section>

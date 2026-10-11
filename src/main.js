@@ -1,5 +1,5 @@
 import './styles.css';
-import { searchScripture, getBooks, getTopic, getTopics } from './getBibleService.js';
+import { searchScripture, getBooks, getDailyDiscovery, getPassage, getTopic, getTopics } from './getBibleService.js';
 import { loadStudyState } from './storage.js';
 import { createIcon, mountIcons } from './icons.js';
 import { appUrl, normalizeReference, passageUrl } from './utils.js';
@@ -28,7 +28,7 @@ function renderRecentPassages() {
   list.replaceChildren(createPassageLink(state.activePassage, 'Continue your study'));
 }
 
-function renderSavedPassages() {
+async function renderSavedPassages() {
   const list = document.querySelector('#saved-list');
 
   if (!list) {
@@ -41,9 +41,43 @@ function renderSavedPassages() {
     return;
   }
 
-  state.savedPassages.forEach((reference) => {
-    list.appendChild(createPassageLink(reference, 'Saved passage', 'heart'));
+  const links = state.savedPassages.map((reference) => {
+    const link = createPassageLink(reference, 'Loading verse...', 'heart');
+    list.appendChild(link);
+    return { reference, link };
   });
+  await Promise.allSettled(links.map(async ({ reference, link }) => {
+    try {
+      const passage = await getPassage(reference, state.translation);
+      link.querySelector('small').textContent = passage.verses[0].text;
+    } catch {
+      link.querySelector('small').textContent = 'Verse text unavailable. Open to try again.';
+    }
+  }));
+}
+
+async function renderDailyDiscovery() {
+  const title = document.querySelector('#daily-reference');
+  const description = document.querySelector('#daily-description');
+  const topicLabel = document.querySelector('#daily-topic');
+  const link = document.querySelector('#daily-link');
+  const retry = document.querySelector('#daily-retry');
+  title.textContent = 'Loading daily passage...';
+  description.textContent = 'Finding a passage from GetBible Topics.';
+  link.hidden = true;
+  retry.hidden = true;
+  try {
+    const daily = await getDailyDiscovery(new Date(), state.translation);
+    title.textContent = daily.reference;
+    description.textContent = daily.text;
+    topicLabel.textContent = `TODAY'S ${daily.topic.toUpperCase()} PASSAGE`;
+    link.href = passageUrl(daily.reference);
+    link.hidden = false;
+  } catch (error) {
+    title.textContent = 'Daily passage unavailable';
+    description.textContent = error.message;
+    retry.hidden = false;
+  }
 }
 
 function handleHomeSearch(formSelector, inputSelector) {
@@ -65,11 +99,18 @@ function handleHomeSearch(formSelector, inputSelector) {
 }
 
 function renderStudyTrail() {
-  const list = document.querySelector('#recent-study-list');
-  if (!list) return;
-  list.replaceChildren();
-  state.recentPassages.forEach((reference) => {
-    list.appendChild(createPassageLink(reference, 'Recent passage · KJV', 'bookmark'));
+  document.querySelectorAll('#recent-study-list, #history-list').forEach((list) => {
+    list.replaceChildren();
+    if (!state.recentPassages.length) {
+      const empty = document.createElement('p');
+      empty.className = 'home-empty';
+      empty.textContent = 'Passages you open will appear here.';
+      list.appendChild(empty);
+      return;
+    }
+    state.recentPassages.forEach((reference) => {
+      list.appendChild(createPassageLink(reference, `Recent passage · ${state.translation.toUpperCase()}`, 'bookmark'));
+    });
   });
 }
 
@@ -201,7 +242,7 @@ function setupSearch() {
         results.appendChild(link);
       });
       offset += data.matches.length;
-      status.textContent = data.total === 0 ? 'No matching verses found.' : `${data.total} matching ${data.total === 1 ? 'verse' : 'verses'} in KJV`;
+      status.textContent = data.total === 0 ? 'No matching verses found.' : `${data.total} matching ${data.total === 1 ? 'verse' : 'verses'} in ${state.translation.toUpperCase()}`;
       more.hidden = !data.hasMore;
     } catch (error) {
       if (error.name !== 'AbortError') {
@@ -233,16 +274,25 @@ mountIcons();
 if (page === 'home') {
   renderRecentPassages();
   renderStudyTrail();
+  renderDailyDiscovery();
+  document.querySelector('#daily-retry').addEventListener('click', renderDailyDiscovery);
   renderTopics();
   handleHomeSearch('#home-search', '#home-query');
   document.querySelector('.mobile-header .icon-button')?.addEventListener('click', () => {
     const menu = document.querySelector('#mobile-menu');
     menu.hidden = !menu.hidden;
+    document.querySelector('.mobile-header .icon-button').setAttribute('aria-expanded', String(!menu.hidden));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelector('#mobile-menu').hidden = true;
+    document.querySelector('.mobile-header .icon-button').setAttribute('aria-expanded', 'false');
   });
 }
 
 if (page === 'saved') {
   renderSavedPassages();
+  renderStudyTrail();
 }
 
 if (page === 'search') {
